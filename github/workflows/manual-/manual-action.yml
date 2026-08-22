@@ -1,0 +1,44 @@
+name: تشغيل الإجراء يدوياً (Manual Workflow)
+
+# 1. الحدث: هنا نحدد أن التشغيل يدوي مع طلب مدخلات من المستخدم
+on:
+  workflow_dispatch:
+    inputs:
+      user_name:
+        description: 'اكتب اسمك هنا'
+        required: true
+        default: 'صديقي المطور'
+      environment:
+        type: choice
+        description: 'اختر البيئة التي تريد الرفع إليها'
+        required: true
+        options:
+          - Development
+          - Staging
+          - Production
+      deploy_flag:
+        type: boolean
+        description: 'هل تريد تأكيد النشر؟'
+        default: false
+
+# 2. المهام (Jobs)
+jobs:
+  my_manual_job:
+    runs-on: ubuntu-latest # الخادم المستخدم (لينكس أوبونتو)
+
+    steps:
+      # الخطوة الأولى: تحميل كود المشروع داخل الخادم
+      - name: تحميل الكود (Checkout Code)
+        uses: actions/checkout@v4
+
+      # الخطوة الثانية: طباعة القيم التي أدخلها المستخدم
+      - name: عرض البيانات والترحيب
+        run: |
+          echo "أهلاً بك يا ${{ github.event.inputs.user_name }}!"
+          echo "البيئة المختارة هي: ${{ github.event.inputs.environment }}"
+          echo "حالة النشر: ${{ github.event.inputs.deploy_flag }}"
+
+      # الخطوة الثالثة: تنفيذ أمر تجريبي بناءً على اختيار
+      - name: خطوة إضافية
+        run: |
+          echo "جاري تنفيذ الإجراء الآن بنجاح على نظام: $(uname -a)"
