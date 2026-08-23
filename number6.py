@@ -1,4 +1,4 @@
-import sys
+impor
 import re
 from bs4 import BeautifulSoup
 import pyperclip
